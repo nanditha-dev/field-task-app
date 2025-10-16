@@ -15,8 +15,8 @@ if linkage != nil
 end
 
 target 'FieldTaskApp' do
-  config = use_native_modules!
-
+config = use_native_modules!
+pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
   use_react_native!(
     :path => config[:reactNativePath],
     # An absolute path to your application root.
