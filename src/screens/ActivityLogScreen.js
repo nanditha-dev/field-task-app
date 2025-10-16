@@ -4,7 +4,6 @@ import { useTheme } from '@react-navigation/native';
 import { useTasks } from '../store/TaskContext';
 import { logEvent } from '../analytics/logger';
 
-// Simple formatter (MMM d, HH:mm). Set hour12: true if you want 12-hour time.
 const fmt = (d) =>
   new Date(d).toLocaleString(undefined, {
     month: 'short',

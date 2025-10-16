@@ -12,7 +12,7 @@ export default function SettingsScreen({ navigation }) {
 
   return (
     <View style={[styles.screen, { backgroundColor: colors.background }]}>
-      {/* Group 1: Dark Mode + About */}
+    
       <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <View style={[styles.row, styles.rowWithDivider, { borderBottomColor: colors.border }]}>
           <Text style={[styles.rowLabel, { color: colors.text }]}>Dark Mode</Text>

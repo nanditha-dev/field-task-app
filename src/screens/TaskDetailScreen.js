@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRightWidth: 0, // contained by row’s border
+    borderRightWidth: 0,
   },
   segmentText: { fontWeight: '600' },
 

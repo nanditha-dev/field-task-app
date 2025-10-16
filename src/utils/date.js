@@ -1,10 +1,8 @@
-// src/utils/date.js
-// No external dependencies
 
 export function formatDate(iso) {
   if (!iso) return '';
   const d = new Date(iso);
-  return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); // e.g., "Apr 26"
+  return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); 
 }
 
 function startOfDay(date) {
@@ -28,14 +26,14 @@ export function isOverdue(iso) {
   if (!iso) return false;
   const d = startOfDay(iso);
   const today = startOfDay(new Date());
-  return d < today; // strictly before today
+  return d < today; 
 }
 
 export function isUpcoming(iso) {
-  if (!iso) return true; // no due date -> treat as upcoming
+  if (!iso) return true; 
   const d = startOfDay(iso);
   const today = startOfDay(new Date());
-  return d > today; // strictly after today
+  return d > today; 
 }
 
 export function parseISO(iso) {

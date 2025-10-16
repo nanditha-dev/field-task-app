@@ -43,7 +43,7 @@ export function TaskProvider({ children }) {
     })();
   }, []);
 
-  // persist on tasks/activity change (after hydration)
+
   useEffect(() => {
     if (state.hydrated) {
       saveTasks(state.tasks);
