@@ -1,5 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, TextInput, StyleSheet, Alert, Text, TouchableOpacity } from 'react-native';
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Alert,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { AuthContext } from '../context/AuthContext';
 
@@ -14,7 +21,7 @@ export default function LoginScreen({ navigation }) {
     }
   }, [user, navigation]);
 
-  const isValidEmail = (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+  const isValidEmail = val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
 
   const handleLogin = () => {
     if (!email.trim()) {
@@ -36,7 +43,11 @@ export default function LoginScreen({ navigation }) {
         onChangeText={setEmail}
         style={[
           styles.input,
-          { backgroundColor: colors.inputBg || colors.card, borderColor: colors.border, color: colors.text },
+          {
+            backgroundColor: colors.inputBg || colors.card,
+            borderColor: colors.border,
+            color: colors.text,
+          },
         ]}
         placeholderTextColor={colors.mutedText || '#AFB2BF'}
         keyboardType="email-address"
@@ -48,7 +59,13 @@ export default function LoginScreen({ navigation }) {
         onSubmitEditing={handleLogin}
       />
 
-      <TouchableOpacity onPress={handleLogin} style={[styles.buttonStyle, { backgroundColor: colors.primary || '#3B63A8' }]}>
+      <TouchableOpacity
+        onPress={handleLogin}
+        style={[
+          styles.buttonStyle,
+          { backgroundColor: colors.primary || '#3B63A8' },
+        ]}
+      >
         <Text style={{ color: '#FFF', fontWeight: '600' }}>Sign In</Text>
       </TouchableOpacity>
     </View>
@@ -56,21 +73,21 @@ export default function LoginScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { 
+  container: {
     flex: 1,
     justifyContent: 'center',
     padding: 20,
   },
   input: {
-    borderWidth: 1, 
+    borderWidth: 1,
     padding: 12,
-    marginBottom: 20, 
+    marginBottom: 20,
     borderRadius: 8,
   },
-  buttonStyle:{
-    justifyContent:'center',
-    alignItems:'center',
-    padding:14,
-    borderRadius:10,
-  }
+  buttonStyle: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 14,
+    borderRadius: 10,
+  },
 });

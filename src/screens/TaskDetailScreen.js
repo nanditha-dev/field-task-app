@@ -1,5 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  Platform,
+} from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useTasks } from '../store/TaskContext';
@@ -17,12 +25,17 @@ export default function TaskDetailScreen({ route, navigation }) {
   const [title, setTitle] = useState(existing?.title || '');
   const [description, setDescription] = useState(existing?.description || '');
   const [priority, setPriority] = useState(existing?.priority || 'Medium');
-  const [dueDate, setDueDate] = useState(existing?.dueDate ? new Date(existing.dueDate) : null);
+  const [dueDate, setDueDate] = useState(
+    existing?.dueDate ? new Date(existing.dueDate) : null,
+  );
   const [tagsInput, setTagsInput] = useState(existing?.tags?.join(', ') || '');
   const [showPicker, setShowPicker] = useState(false);
 
   useEffect(() => {
-    logEvent('screen_view', { screen: 'TaskDetail', mode: existing ? 'edit' : 'create' });
+    logEvent('screen_view', {
+      screen: 'TaskDetail',
+      mode: existing ? 'edit' : 'create',
+    });
   }, [existing]);
 
   const onSave = () => {
@@ -35,7 +48,10 @@ export default function TaskDetailScreen({ route, navigation }) {
       description,
       priority,
       dueDate: dueDate ? dueDate.toISOString() : null,
-      tags: tagsInput.split(',').map(t => t.trim()).filter(Boolean),
+      tags: tagsInput
+        .split(',')
+        .map(t => t.trim())
+        .filter(Boolean),
     };
 
     if (existing) {
@@ -51,10 +67,14 @@ export default function TaskDetailScreen({ route, navigation }) {
     if (!existing) return;
     Alert.alert('Delete Task', `Delete "${existing.title}"?`, [
       { text: 'Cancel', style: 'cancel' },
-      { text: 'Delete', style: 'destructive', onPress: () => {
-        deleteTask(existing.id);
-        navigation.goBack();
-      }},
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: () => {
+          deleteTask(existing.id);
+          navigation.goBack();
+        },
+      },
     ]);
   };
 
@@ -69,7 +89,14 @@ export default function TaskDetailScreen({ route, navigation }) {
       <Labeled label="Title" color={colors.text}>
         <TextInput
           placeholder="Task title"
-          style={[styles.input, { backgroundColor: colors.inputBg || colors.card, borderColor: colors.border, color: colors.text }]}
+          style={[
+            styles.input,
+            {
+              backgroundColor: colors.inputBg || colors.card,
+              borderColor: colors.border,
+              color: colors.text,
+            },
+          ]}
           placeholderTextColor={colors.mutedText || '#9CA3AF'}
           value={title}
           onChangeText={setTitle}
@@ -79,7 +106,15 @@ export default function TaskDetailScreen({ route, navigation }) {
       <Labeled label="Description" color={colors.text}>
         <TextInput
           placeholder="Describe the task"
-          style={[styles.input, { height: 96, backgroundColor: colors.inputBg || colors.card, borderColor: colors.border, color: colors.text }]}
+          style={[
+            styles.input,
+            {
+              height: 96,
+              backgroundColor: colors.inputBg || colors.card,
+              borderColor: colors.border,
+              color: colors.text,
+            },
+          ]}
           placeholderTextColor={colors.mutedText || '#9CA3AF'}
           value={description}
           onChangeText={setDescription}
@@ -98,7 +133,10 @@ export default function TaskDetailScreen({ route, navigation }) {
                 style={[
                   styles.segment,
                   { backgroundColor: colors.card, borderColor: colors.border },
-                  selected && { backgroundColor: colors.primary, borderColor: colors.primary },
+                  selected && {
+                    backgroundColor: colors.primary,
+                    borderColor: colors.primary,
+                  },
                 ]}
                 activeOpacity={0.8}
               >
@@ -120,14 +158,29 @@ export default function TaskDetailScreen({ route, navigation }) {
       <Labeled label="Due Date" color={colors.text}>
         <TouchableOpacity
           onPress={() => setShowPicker(true)}
-          style={[styles.input, { backgroundColor: colors.inputBg || colors.card, borderColor: colors.border }]}
+          style={[
+            styles.input,
+            {
+              backgroundColor: colors.inputBg || colors.card,
+              borderColor: colors.border,
+            },
+          ]}
           activeOpacity={0.8}
         >
           <View style={styles.inputRow}>
-            <Text style={{ color: dueDate ? colors.text : (colors.mutedText || '#9CA3AF'), flex: 1 }}>
+            <Text
+              style={{
+                color: dueDate ? colors.text : colors.mutedText || '#9CA3AF',
+                flex: 1,
+              }}
+            >
               {dueDate ? formatDate(dueDate.toISOString()) : 'Select a date'}
             </Text>
-            <Ionicons name="chevron-forward" size={20} color={colors.mutedText || '#6B7280'} />
+            <Ionicons
+              name="chevron-forward"
+              size={20}
+              color={colors.mutedText || '#6B7280'}
+            />
           </View>
         </TouchableOpacity>
 
@@ -141,7 +194,7 @@ export default function TaskDetailScreen({ route, navigation }) {
                 setShowPicker(false);
                 if (event.type === 'set' && d) setDueDate(d);
               } else {
-                 setShowPicker(false);
+                setShowPicker(false);
                 if (d) setDueDate(d);
               }
             }}
@@ -152,7 +205,14 @@ export default function TaskDetailScreen({ route, navigation }) {
       <Labeled label="Tags" color={colors.text}>
         <TextInput
           placeholder="e.g. pump, urgent"
-          style={[styles.input, { backgroundColor: colors.inputBg || colors.card, borderColor: colors.border, color: colors.text }]}
+          style={[
+            styles.input,
+            {
+              backgroundColor: colors.inputBg || colors.card,
+              borderColor: colors.border,
+              color: colors.text,
+            },
+          ]}
           placeholderTextColor={colors.mutedText || '#9CA3AF'}
           value={tagsInput}
           onChangeText={setTagsInput}
@@ -162,22 +222,36 @@ export default function TaskDetailScreen({ route, navigation }) {
 
       <View style={{ height: 12 }} />
 
-      <TouchableOpacity onPress={onSave} style={[styles.primaryBtn, { backgroundColor: colors.primary || '#3B63A8' }]}>
+      <TouchableOpacity
+        onPress={onSave}
+        style={[
+          styles.primaryBtn,
+          { backgroundColor: colors.primary || '#3B63A8' },
+        ]}
+      >
         <Text style={styles.primaryBtnText}>
-          <Ionicons name="save-outline" size={16} />  Save
+          <Ionicons name="save-outline" size={16} /> Save
         </Text>
       </TouchableOpacity>
 
       {existing && (
         <>
-          <TouchableOpacity onPress={onToggleComplete} style={[styles.secondaryBtn, { backgroundColor: colors.card }]}>
+          <TouchableOpacity
+            onPress={onToggleComplete}
+            style={[styles.secondaryBtn, { backgroundColor: colors.card }]}
+          >
             <Text style={[styles.secondaryBtnText, { color: colors.text }]}>
               {existing.status === 'Done' ? 'Reopen Task' : 'Mark Complete'}
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={onDelete} style={[styles.destructiveBtn, { backgroundColor: '#FEE2E2' }]}>
-            <Text style={[styles.destructiveBtnText, { color: '#B91C1C' }]}>Delete</Text>
+          <TouchableOpacity
+            onPress={onDelete}
+            style={[styles.destructiveBtn, { backgroundColor: '#FEE2E2' }]}
+          >
+            <Text style={[styles.destructiveBtnText, { color: '#B91C1C' }]}>
+              Delete
+            </Text>
           </TouchableOpacity>
         </>
       )}

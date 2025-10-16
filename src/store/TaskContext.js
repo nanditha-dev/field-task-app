@@ -1,7 +1,18 @@
-import React, { createContext, useContext, useEffect, useMemo, useReducer } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+} from 'react';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
-import { loadTasks, saveTasks, loadActivity, saveActivity } from '../utils/storage';
+import {
+  loadTasks,
+  saveTasks,
+  loadActivity,
+  saveActivity,
+} from '../utils/storage';
 import { logEvent } from '../analytics/logger';
 
 const TaskContext = createContext(null);
@@ -15,18 +26,37 @@ const initialState = {
 function reducer(state, action) {
   switch (action.type) {
     case 'HYDRATE':
-      return { ...state, tasks: action.tasks, activity: action.activity, hydrated: true };
+      return {
+        ...state,
+        tasks: action.tasks,
+        activity: action.activity,
+        hydrated: true,
+      };
     case 'ADD_TASK':
-      return { ...state, tasks: [action.task, ...state.tasks], activity: [action.activity, ...state.activity] };
+      return {
+        ...state,
+        tasks: [action.task, ...state.tasks],
+        activity: [action.activity, ...state.activity],
+      };
     case 'UPDATE_TASK': {
-      const tasks = state.tasks.map(t => (t.id === action.task.id ? action.task : t));
-      return { ...state, tasks, activity: [action.activity, ...state.activity] };
+      const tasks = state.tasks.map(t =>
+        t.id === action.task.id ? action.task : t,
+      );
+      return {
+        ...state,
+        tasks,
+        activity: [action.activity, ...state.activity],
+      };
     }
     case 'DELETE_TASK': {
       const tasks = state.tasks.filter(t => t.id !== action.id);
-      return { ...state, tasks, activity: [action.activity, ...state.activity] };
+      return {
+        ...state,
+        tasks,
+        activity: [action.activity, ...state.activity],
+      };
     }
-    case 'REPLACE_ALL': 
+    case 'REPLACE_ALL':
       return { ...state, tasks: action.tasks };
     default:
       return state;
@@ -38,11 +68,13 @@ export function TaskProvider({ children }) {
 
   useEffect(() => {
     (async () => {
-      const [tasks, activity] = await Promise.all([loadTasks(), loadActivity()]);
+      const [tasks, activity] = await Promise.all([
+        loadTasks(),
+        loadActivity(),
+      ]);
       dispatch({ type: 'HYDRATE', tasks, activity });
     })();
   }, []);
-
 
   useEffect(() => {
     if (state.hydrated) {
@@ -51,7 +83,7 @@ export function TaskProvider({ children }) {
     }
   }, [state.tasks, state.activity, state.hydrated]);
 
-  const addTask = (partial) => {
+  const addTask = partial => {
     const now = new Date().toISOString();
     const task = {
       id: uuidv4(),
@@ -92,7 +124,7 @@ export function TaskProvider({ children }) {
     dispatch({ type: 'UPDATE_TASK', task, activity });
   };
 
-  const toggleComplete = (id) => {
+  const toggleComplete = id => {
     const t = state.tasks.find(x => x.id === id);
     if (!t) return;
     const now = new Date().toISOString();
@@ -108,7 +140,7 @@ export function TaskProvider({ children }) {
     dispatch({ type: 'UPDATE_TASK', task, activity });
   };
 
-  const deleteTask = (id) => {
+  const deleteTask = id => {
     const t = state.tasks.find(x => x.id === id);
     const now = new Date().toISOString();
     const activity = {
@@ -126,16 +158,19 @@ export function TaskProvider({ children }) {
     dispatch({ type: 'REPLACE_ALL', tasks });
   };
 
-  const value = useMemo(() => ({
-    tasks: state.tasks,
-    activity: state.activity,
-    hydrated: state.hydrated,
-    addTask,
-    updateTask,
-    deleteTask,
-    toggleComplete,
-    reloadFromStorage,
-  }), [state, addTask, updateTask, deleteTask, toggleComplete]);
+  const value = useMemo(
+    () => ({
+      tasks: state.tasks,
+      activity: state.activity,
+      hydrated: state.hydrated,
+      addTask,
+      updateTask,
+      deleteTask,
+      toggleComplete,
+      reloadFromStorage,
+    }),
+    [state, addTask, updateTask, deleteTask, toggleComplete],
+  );
 
   return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;
 }

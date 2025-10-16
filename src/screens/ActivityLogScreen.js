@@ -4,7 +4,7 @@ import { useTheme } from '@react-navigation/native';
 import { useTasks } from '../store/TaskContext';
 import { logEvent } from '../analytics/logger';
 
-const fmt = (d) =>
+const fmt = d =>
   new Date(d).toLocaleString(undefined, {
     month: 'short',
     day: 'numeric',
@@ -17,12 +17,18 @@ function renderLine(a) {
   const time = fmt(a.timestamp);
   const title = a?.meta?.title ?? '';
   switch (a.type) {
-    case 'create':   return `Created "${title}" at ${time}`;
-    case 'update':   return `Updated "${title}" at ${time}`;
-    case 'complete': return `Marked "${title}" as complete at ${time}`;
-    case 'reopen':   return `Reopened "${title}" at ${time}`;
-    case 'delete':   return `Deleted "${title}" at ${time}`;
-    default:         return `${a.type} - ${time}`;
+    case 'create':
+      return `Created "${title}" at ${time}`;
+    case 'update':
+      return `Updated "${title}" at ${time}`;
+    case 'complete':
+      return `Marked "${title}" as complete at ${time}`;
+    case 'reopen':
+      return `Reopened "${title}" at ${time}`;
+    case 'delete':
+      return `Deleted "${title}" at ${time}`;
+    default:
+      return `${a.type} - ${time}`;
   }
 }
 
@@ -38,10 +44,12 @@ export default function ActivityLogScreen() {
     <FlatList
       style={[styles.list, { backgroundColor: colors.background }]}
       data={activity}
-      keyExtractor={(i) => i.id}
+      keyExtractor={i => i.id}
       renderItem={({ item }) => (
         <View style={[styles.row, { borderBottomColor: colors.border }]}>
-          <Text style={[styles.text, { color: colors.text }]}>{renderLine(item)}</Text>
+          <Text style={[styles.text, { color: colors.text }]}>
+            {renderLine(item)}
+          </Text>
         </View>
       )}
       ListEmptyComponent={

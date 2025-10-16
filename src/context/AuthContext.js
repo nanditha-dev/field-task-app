@@ -5,7 +5,7 @@ import { SESSION_KEY } from '../utils/storage';
 export const AuthContext = createContext({
   user: null,
   loading: true,
-  signIn: (email) => {},
+  signIn: email => {},
   signOut: () => {},
 });
 
@@ -24,7 +24,7 @@ export function AuthProvider({ children }) {
     })();
   }, []);
 
-  const signIn = async (email) => {
+  const signIn = async email => {
     const session = { email, createdAt: new Date().toISOString() };
     setUser(session);
     await AsyncStorage.setItem(SESSION_KEY, JSON.stringify(session));

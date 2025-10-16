@@ -1,5 +1,14 @@
 import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
-import { View, Text, SectionList, TextInput, StyleSheet, TouchableOpacity, RefreshControl } from 'react-native';
+import {
+  View,
+  Text,
+  SectionList,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  RefreshControl,
+  Alert,
+} from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import TaskItem from '../components/TaskItem';
@@ -10,19 +19,33 @@ import { logEvent } from '../analytics/logger';
 function groupTasks(tasks, query, priorityFilter, statusFilter) {
   const q = query.trim().toLowerCase();
   const filtered = tasks.filter(t => {
-    const matchText = !q || t.title.toLowerCase().includes(q) || t.description.toLowerCase().includes(q);
-    const matchPriority = priorityFilter === 'All' || t.priority === priorityFilter;
-    const matchStatus = statusFilter === 'All' || (statusFilter === 'Done' ? t.status === 'Done' : t.status === 'Todo');
+    const matchText =
+      !q ||
+      t.title.toLowerCase().includes(q) ||
+      t.description.toLowerCase().includes(q);
+    const matchPriority =
+      priorityFilter === 'All' || t.priority === priorityFilter;
+    const matchStatus =
+      statusFilter === 'All' ||
+      (statusFilter === 'Done' ? t.status === 'Done' : t.status === 'Todo');
     return matchText && matchPriority && matchStatus;
   });
 
   const today = filtered.filter(t => t.dueDate && isDueToday(t.dueDate));
-  const overdue = filtered.filter(t => isOverdue(t.dueDate) && t.status !== 'Done');
-  const upcoming = filtered.filter(t => !today.includes(t) && !overdue.includes(t));
+  const overdue = filtered.filter(
+    t => isOverdue(t.dueDate) && t.status !== 'Done',
+  );
+  const upcoming = filtered.filter(
+    t => !today.includes(t) && !overdue.includes(t),
+  );
 
   const sorter = (a, b) => {
-    const da = a.dueDate ? new Date(a.dueDate).getTime() : Number.MAX_SAFE_INTEGER;
-    const db = b.dueDate ? new Date(b.dueDate).getTime() : Number.MAX_SAFE_INTEGER;
+    const da = a.dueDate
+      ? new Date(a.dueDate).getTime()
+      : Number.MAX_SAFE_INTEGER;
+    const db = b.dueDate
+      ? new Date(b.dueDate).getTime()
+      : Number.MAX_SAFE_INTEGER;
     return da - db;
   };
 
@@ -71,7 +94,7 @@ export default function TaskListScreen({ navigation }) {
 
   const sections = useMemo(
     () => groupTasks(tasks, query, priorityFilter, statusFilter),
-    [tasks, query, priorityFilter, statusFilter]
+    [tasks, query, priorityFilter, statusFilter],
   );
 
   const onRefresh = async () => {
@@ -87,29 +110,70 @@ export default function TaskListScreen({ navigation }) {
         placeholderTextColor={colors.mutedText || '#9CA3AF'}
         style={[
           styles.search,
-          { backgroundColor: colors.inputBg || colors.card, borderColor: colors.border, color: colors.text },
+          {
+            backgroundColor: colors.inputBg || colors.card,
+            borderColor: colors.border,
+            color: colors.text,
+          },
         ]}
         value={query}
         onChangeText={setQuery}
       />
 
       <View style={styles.filters}>
-        <FilterChip colors={colors} label="All" selected={priorityFilter === 'All'} onPress={() => setPriorityFilter('All')} />
-        <FilterChip colors={colors} label="Low" selected={priorityFilter === 'Low'} onPress={() => setPriorityFilter('Low')} />
-        <FilterChip colors={colors} label="Medium" selected={priorityFilter === 'Medium'} onPress={() => setPriorityFilter('Medium')} />
-        <FilterChip colors={colors} label="High" selected={priorityFilter === 'High'} onPress={() => setPriorityFilter('High')} />
+        <FilterChip
+          colors={colors}
+          label="All"
+          selected={priorityFilter === 'All'}
+          onPress={() => setPriorityFilter('All')}
+        />
+        <FilterChip
+          colors={colors}
+          label="Low"
+          selected={priorityFilter === 'Low'}
+          onPress={() => setPriorityFilter('Low')}
+        />
+        <FilterChip
+          colors={colors}
+          label="Medium"
+          selected={priorityFilter === 'Medium'}
+          onPress={() => setPriorityFilter('Medium')}
+        />
+        <FilterChip
+          colors={colors}
+          label="High"
+          selected={priorityFilter === 'High'}
+          onPress={() => setPriorityFilter('High')}
+        />
         <View style={{ width: 12 }} />
-        <FilterChip colors={colors} label="All" selected={statusFilter === 'All'} onPress={() => setStatusFilter('All')} />
-        <FilterChip colors={colors} label="Todo" selected={statusFilter === 'Todo'} onPress={() => setStatusFilter('Todo')} />
-        <FilterChip colors={colors} label="Done" selected={statusFilter === 'Done'} onPress={() => setStatusFilter('Done')} />
+        <FilterChip
+          colors={colors}
+          label="All"
+          selected={statusFilter === 'All'}
+          onPress={() => setStatusFilter('All')}
+        />
+        <FilterChip
+          colors={colors}
+          label="Todo"
+          selected={statusFilter === 'Todo'}
+          onPress={() => setStatusFilter('Todo')}
+        />
+        <FilterChip
+          colors={colors}
+          label="Done"
+          selected={statusFilter === 'Done'}
+          onPress={() => setStatusFilter('Done')}
+        />
       </View>
 
       <SectionList
         style={{ backgroundColor: colors.background }}
         sections={sections}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         renderSectionHeader={({ section: { title } }) => (
-          <Text style={[styles.sectionHeader, { color: colors.text }]}>{title}</Text>
+          <Text style={[styles.sectionHeader, { color: colors.text }]}>
+            {title}
+          </Text>
         )}
         renderItem={({ item }) => (
           <TaskItem
@@ -117,21 +181,27 @@ export default function TaskListScreen({ navigation }) {
             onPress={() => navigation.navigate('TaskDetail', { id: item.id })}
             onToggle={() => toggleComplete(item.id)}
             onDelete={() => {
-              import('react-native').then(({ Alert }) => {
-                Alert.alert('Delete Task', `Delete "${item.title}"?`, [
-                  { text: 'Cancel', style: 'cancel' },
-                  { text: 'Delete', style: 'destructive', onPress: () => deleteTask(item.id) },
-                ]);
-              });
+              Alert.alert('Delete Task', `Delete "${item.title}"?`, [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                  text: 'Delete',
+                  style: 'destructive',
+                  onPress: () => deleteTask(item.id),
+                },
+              ]);
             }}
           />
         )}
         ListEmptyComponent={
           <View style={{ alignItems: 'center', paddingVertical: 40 }}>
-            <Text style={{ color: colors.text }}>No tasks. Tap + to create one.</Text>
+            <Text style={{ color: colors.text }}>
+              No tasks. Tap + to create one.
+            </Text>
           </View>
         }
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         contentContainerStyle={{ paddingBottom: 90 }}
       />
 
@@ -152,11 +222,19 @@ function FilterChip({ label, selected, onPress, colors }) {
       onPress={onPress}
       style={[
         styles.chip,
-        { backgroundColor: (colors.chipBg || colors.card), borderColor: colors.border },
-        selected && { backgroundColor: colors.card, borderColor: colors.primary },
+        {
+          backgroundColor: colors.chipBg || colors.card,
+          borderColor: colors.border,
+        },
+        selected && {
+          backgroundColor: colors.card,
+          borderColor: colors.primary,
+        },
       ]}
     >
-      <Text style={{ fontSize: 12, fontWeight: '600', color: colors.text }}>{label}</Text>
+      <Text style={{ fontSize: 12, fontWeight: '600', color: colors.text }}>
+        {label}
+      </Text>
     </TouchableOpacity>
   );
 }

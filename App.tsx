@@ -1,6 +1,10 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  DefaultTheme,
+  DarkTheme,
+} from '@react-navigation/native';
 import RootStack from './src/navigation/AppNavigator';
 import { AuthProvider } from './src/context/AuthContext';
 import { TaskProvider } from './src/store/TaskContext';
@@ -10,7 +14,7 @@ function AppNav() {
   const { isDark } = useThemeContext();
   return (
     <NavigationContainer theme={isDark ? DarkTheme : DefaultTheme}>
-    <RootStack />
+      <RootStack />
     </NavigationContainer>
   );
 }

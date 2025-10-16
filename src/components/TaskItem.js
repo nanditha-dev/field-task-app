@@ -21,7 +21,9 @@ export default function TaskItem({ task, onPress, onToggle, onDelete }) {
       <TouchableOpacity
         onPress={onToggle}
         style={styles.checkbox}
-        accessibilityLabel={task.status === 'Done' ? 'Reopen task' : 'Mark task complete'}
+        accessibilityLabel={
+          task.status === 'Done' ? 'Reopen task' : 'Mark task complete'
+        }
       >
         {task.status === 'Done' ? (
           <Ionicons name="checkmark-circle" size={22} color="#16A34A" />
@@ -38,7 +40,10 @@ export default function TaskItem({ task, onPress, onToggle, onDelete }) {
           style={[
             styles.title,
             { color: colors.text },
-            task.status === 'Done' && { textDecorationLine: 'line-through', color: neutral },
+            task.status === 'Done' && {
+              textDecorationLine: 'line-through',
+              color: neutral,
+            },
           ]}
         >
           {task.title}
@@ -46,10 +51,15 @@ export default function TaskItem({ task, onPress, onToggle, onDelete }) {
 
         <View style={styles.metaRow}>
           {task.dueDate ? (
-            <Text style={[styles.metaText, { color: neutral }]}>{formatDate(task.dueDate)}</Text>
+            <Text style={[styles.metaText, { color: neutral }]}>
+              {formatDate(task.dueDate)}
+            </Text>
           ) : null}
           {task.tags?.length ? (
-            <Text style={[styles.metaText, { color: neutral }]} numberOfLines={1}>
+            <Text
+              style={[styles.metaText, { color: neutral }]}
+              numberOfLines={1}
+            >
               {task.tags.map(t => `#${t}`).join(' ')}
             </Text>
           ) : null}
@@ -57,10 +67,16 @@ export default function TaskItem({ task, onPress, onToggle, onDelete }) {
       </View>
 
       <View style={[styles.chip, { borderColor: priorityColor }]}>
-        <Text style={[styles.chipText, { color: priorityColor }]}>{task.priority}</Text>
+        <Text style={[styles.chipText, { color: priorityColor }]}>
+          {task.priority}
+        </Text>
       </View>
 
-      <TouchableOpacity onPress={onDelete} hitSlop={8} style={{ marginLeft: 8 }}>
+      <TouchableOpacity
+        onPress={onDelete}
+        hitSlop={8}
+        style={{ marginLeft: 8 }}
+      >
         <Ionicons name="trash-outline" size={20} color={neutral} />
       </TouchableOpacity>
     </TouchableOpacity>

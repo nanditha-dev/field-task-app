@@ -1,7 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-export default function EmptyState({ title = 'No tasks yet', caption = 'Create your first task to get started.' }) {
+export default function EmptyState({
+  title = 'No tasks yet',
+  caption = 'Create your first task to get started.',
+}) {
   return (
     <View style={styles.wrap}>
       <Text style={styles.title}>{title}</Text>

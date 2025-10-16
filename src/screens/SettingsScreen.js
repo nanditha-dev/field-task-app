@@ -12,10 +12,22 @@ export default function SettingsScreen({ navigation }) {
 
   return (
     <View style={[styles.screen, { backgroundColor: colors.background }]}>
-    
-      <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-        <View style={[styles.row, styles.rowWithDivider, { borderBottomColor: colors.border }]}>
-          <Text style={[styles.rowLabel, { color: colors.text }]}>Dark Mode</Text>
+      <View
+        style={[
+          styles.card,
+          { backgroundColor: colors.card, borderColor: colors.border },
+        ]}
+      >
+        <View
+          style={[
+            styles.row,
+            styles.rowWithDivider,
+            { borderBottomColor: colors.border },
+          ]}
+        >
+          <Text style={[styles.rowLabel, { color: colors.text }]}>
+            Dark Mode
+          </Text>
           <Switch
             value={isDark}
             onValueChange={toggleTheme}
@@ -35,13 +47,20 @@ export default function SettingsScreen({ navigation }) {
       </View>
 
       {/* Group 2: Sign Out */}
-      <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
+      <View
+        style={[
+          styles.card,
+          { backgroundColor: colors.card, borderColor: colors.border },
+        ]}
+      >
         <TouchableOpacity
           style={styles.row}
           onPress={signOut}
           activeOpacity={0.7}
         >
-          <Text style={[styles.signOutText, { color: colors.text }]}>Sign Out</Text>
+          <Text style={[styles.signOutText, { color: colors.text }]}>
+            Sign Out
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
